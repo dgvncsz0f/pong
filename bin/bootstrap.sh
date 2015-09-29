@@ -26,7 +26,7 @@ then
         fi
         cabal sandbox init
         cabal configure -O2
-        while ! timeout 30 cabal install --only-dependencies -O2
+        while ! timeout 60 cabal install --only-dependencies -O2
         do :; done
         cabal build
         cp -a dist/build/pong/pong /usr/local/bin/pong
