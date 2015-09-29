@@ -1,0 +1,19 @@
+name:          pong
+license:       PublicDomain
+version:       0.0.1
+build-type:    Simple
+
+executable pong
+  main-is:         pong.hs
+  c-sources:       src/ancillary.c
+  build-tools:     hsc2hs
+  ghc-options:     -threaded -rtsopts -W
+  include-dirs:    src
+  build-depends:    base
+                  , unix
+                  , time
+                  , network
+                  , process
+                  , directory
+  other-modules:    Ancillary
+  hs-source-dirs:   src
