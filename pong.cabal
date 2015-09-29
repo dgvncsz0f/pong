@@ -12,6 +12,7 @@ executable pong
   build-depends:    base
                   , unix
                   , time        >= 1.5.0.1
+                  , uuid
                   , network
                   , process
                   , directory

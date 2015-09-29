@@ -32,16 +32,16 @@ sendLoop s m
       l <- send s m
       sendLoop s (drop l m)
 
-handle :: (Socket, SockAddr) -> IO ()
-handle (s, _) = do
+handle :: (Socket, SockAddr) -> String -> IO ()
+handle (s, _) uuid = do
   msg <- recvLoop s 4
   case msg of
-    "ping" -> info "ping" >> sendLoop s "pong\n"
-    _      -> sendLoop s "fail\n"
+    "ping" -> info "ping" >> sendLoop s (printf "[%s] - pong\n" uuid)
+    _      -> sendLoop s (printf "[%s] - fail\n" uuid)
 
-server :: IORef Bool -> Socket -> IO ()
-server ctrl s = do
+server :: IORef Bool -> Socket -> String -> IO ()
+server ctrl s uuid = do
   cont <- readIORef ctrl
   when cont $ do
-    accept s >>= \s -> forkFinally (handle s) (const $ sClose $ fst s)
-    server ctrl s
+    accept s >>= \s -> forkFinally (handle s uuid) (const $ sClose $ fst s)
+    server ctrl s uuid

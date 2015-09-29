@@ -2,8 +2,10 @@ module Main (main) where
 
 import Server
 import Ancillary
+import Data.UUID
 import Data.IORef
 import Data.Maybe
+import Data.UUID.V1
 import Network.Socket
 import System.Environment
 import Control.Applicative
@@ -40,10 +42,11 @@ main = do
   path <- readPath
   mode <- maybe "start" id . listToMaybe <$> getArgs
   ctrl <- newIORef True
+  uuid <- maybe "--" toString <$> nextUUID
   s    <- case mode of
             "start" -> makeSocket Nothing
             "clone" -> makeSocket $ Just path
             _       -> error $ "invalid mode: " ++ mode
   installHandler sigTERM (Catch $ writeIORef ctrl False) Nothing
   installHandler sigWINCH (Catch $ sendFdTo path (socketFd s)) Nothing
-  server ctrl s
+  server ctrl s uuid
