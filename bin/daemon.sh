@@ -1,19 +1,22 @@
 #!/bin/sh
 
-daemon=./dist/build/pong/pong
+daemon=pong
 
 start () {
-  exec $daemon
+  consul maint -disable
+  daemon -U -N -i $daemon
 }
 
 stop () {
+  consul maint -enable
+  echo -n waiting 30s...; sleep 30; echo
   pkill -TERM pong
 }
 
 restart () {
   if ! old=$(pgrep pong)
   then exit 1; fi
-  $daemon clone&
+  daemon -U -N -i -- $daemon clone
   while [ ! -e /tmp/pong.socket ]; do sleep 1; done
   kill -WINCH $old
   while [ -e /tmp/pong.socket ]; do sleep 1; done

@@ -8,6 +8,7 @@ import Network.Socket hiding (recvFd, sendFd)
 import System.Directory
 import Control.Exception
 import System.Posix.Types
+import Control.Applicative
 
 sendFd :: Fd -> Fd -> IO ()
 sendFd s fd =

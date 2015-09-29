@@ -7,6 +7,7 @@ import Network.Socket
 import Data.Time.Clock
 import Data.Time.Format
 import Control.Concurrent
+import Control.Applicative
 
 info :: String -> IO ()
 info msg = do

@@ -11,7 +11,7 @@ executable pong
   include-dirs:    src
   build-depends:    base
                   , unix
-                  , time
+                  , time        >= 1.5.0.1
                   , network
                   , process
                   , directory

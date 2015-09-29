@@ -6,13 +6,15 @@ import Data.IORef
 import Data.Maybe
 import Network.Socket
 import System.Environment
+import Control.Applicative
 import System.Posix.Signals.Exts
 
 standaloneServer :: IO Socket
 standaloneServer = do
   let hints = defaultHints { addrFlags =  [AI_NUMERICHOST]}
   port     <- readPort
-  addrinfo <- head <$> getAddrInfo (Just hints) (Just "127.0.0.1") (Just port)
+  host     <- readHost
+  addrinfo <- head <$> getAddrInfo (Just hints) (Just host) (Just port)
   s <- socket (addrFamily addrinfo) (addrSocketType addrinfo) (addrProtocol addrinfo)
   bind s (addrAddress addrinfo)
   listen s 4
@@ -26,6 +28,9 @@ makeSocket (Just p) = do
 
 readPath :: IO String
 readPath = maybe "/tmp/pong.socket" id . lookup "socket" <$> getEnvironment
+
+readHost :: IO String
+readHost = maybe "0.0.0.0" id . lookup "host" <$> getEnvironment
 
 readPort :: IO String
 readPort = maybe "9000" id . lookup "port" <$> getEnvironment
