@@ -35,9 +35,12 @@ sendLoop s m
 handle :: (Socket, SockAddr) -> String -> IO ()
 handle (s, _) uuid = do
   msg <- recvLoop s 4
+  now <- formatTime defaultTimeLocale "%Y%m%d%H%M%S" <$> getCurrentTime
   case msg of
-    "ping" -> info "ping" >> sendLoop s (printf "[%s] - pong\n" uuid)
-    _      -> sendLoop s (printf "[%s] - fail\n" uuid)
+    "ping" -> do
+      info "ping"
+      sendLoop s (printf "[%s|%s] - pong\n" now uuid)
+    _      -> sendLoop s (printf "[%s|%s] - fail\n" now uuid)
 
 server :: IORef Bool -> Socket -> String -> IO ()
 server ctrl s uuid = do
