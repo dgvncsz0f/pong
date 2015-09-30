@@ -21,7 +21,7 @@ def ping (addr):
         if (p[0] == []):
             return(b"fail")
         else:
-            return(s.recv(512))
+            return(s.recv(512, socket.MSG_DONTWAIT))
     finally:
         s.close()
 
