@@ -18,6 +18,7 @@ standaloneServer = do
   host     <- readHost
   addrinfo <- head <$> getAddrInfo (Just hints) (Just host) (Just port)
   s <- socket (addrFamily addrinfo) (addrSocketType addrinfo) (addrProtocol addrinfo)
+  setSocketOption s ReuseAddr 1
   bind s (addrAddress addrinfo)
   listen s 4
   return s
