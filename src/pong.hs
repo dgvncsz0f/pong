@@ -38,12 +38,17 @@ readHost = maybe "0.0.0.0" id . lookup "host" <$> getEnvironment
 readPort :: IO String
 readPort = maybe "9000" id . lookup "port" <$> getEnvironment
 
+readUUID :: IO String
+readUUID = do
+  uuid <- maybe "--" toString <$> nextUUID
+  maybe uuid id . lookup "uuid" <$> getEnvironment
+
 main :: IO ()
 main = do
   path <- readPath
   mode <- maybe "start" id . listToMaybe <$> getArgs
   ctrl <- newIORef True
-  uuid <- maybe "--" toString <$> nextUUID
+  uuid <- readUUID
   s    <- case mode of
             "start" -> makeSocket Nothing
             "clone" -> makeSocket $ Just path
