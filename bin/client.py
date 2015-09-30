@@ -12,10 +12,18 @@ WAIT    = float(os.environ.get("wait", "0.1"))
 CONSUL  = os.environ.get("consul", "127.0.0.1")
 HAPROXY = os.environ.get("haproxy", "127.0.0.1")
 
-def ping (addr):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
+def connect (s, addr):
     try:
         s.connect(addr)
+    except BlockingIOError as e:
+        p = select.select([], [s], [], 1)
+        if (p[1] == []):
+            raise
+
+def ping (addr):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM | socket.SOCK_NONBLOCK, 0)
+    try:
+        connect(s, addr)
         s.send(b"ping")
         p = select.select([s], [], [], 1)
         if (p[0] == []):
