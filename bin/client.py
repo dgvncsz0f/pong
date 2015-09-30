@@ -8,7 +8,9 @@ import socket
 import requests
 import resolver
 
-CONSUL = os.environ.get("consul", "127.0.0.1")
+WAIT    = float(os.environ.get("wait", "0.1"))
+CONSUL  = os.environ.get("consul", "127.0.0.1")
+HAPROXY = os.environ.get("haproxy", "127.0.0.1")
 
 def ping (addr):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
@@ -22,10 +24,14 @@ def ping (addr):
             return(s.recv(512))
     finally:
         s.close()
+
+def repeat (s):
+    while True:
+        yield (s, 4500)
             
 def client (servers):
     for s in servers:
-        time.sleep(0.1)
+        time.sleep(WAIT)
         if (s is None):
             print("FAIL: no servers")
             continue
@@ -34,5 +40,16 @@ def client (servers):
         except:
             print("FAIL: can't connect")
 
+def usage (p):
+    print("use: %s local|remote" % p)
+            
 resolver.start(CONSUL)
-client(resolver.rr())
+if (len(sys.argv) >= 2):
+    if (sys.argv[1] == "local"):
+        client(resolver.rr())
+    elif (sys.argv[1] == "remote"):
+        client(repeat(HAPROXY))
+    else:
+        usage(sys.argv[0])
+else:
+    usage(sys.argv[0])
