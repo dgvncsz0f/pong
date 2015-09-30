@@ -1,6 +1,7 @@
 #!/bin/sh
 
-apt-get install --yes --force-yes git ghc vim curl unzip daemon dnsutils cabal-install netcat-openbsd dnsmasq
+apt-get install --yes --force-yes git ghc vim curl unzip daemon dnsutils \
+        cabal-install netcat-openbsd dnsmasq haproxy python-requests
 
 if [ ! -x /usr/local/bin/consul ]
 then
