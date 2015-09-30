@@ -3,13 +3,10 @@
 daemon=pong
 
 start () {
-  consul maint -disable
   daemon -U -N -i $daemon
 }
 
 stop () {
-  consul maint -enable
-  echo -n waiting 30s...; sleep 30; echo
   pkill -TERM pong
 }
 
