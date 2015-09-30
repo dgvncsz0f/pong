@@ -8,7 +8,7 @@ import socket
 import requests
 import resolver
 
-CONSUL = os.environ.get("consul", "127.0.0.1:8500")
+CONSUL = os.environ.get("consul", "127.0.0.1")
 
 def ping (addr):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)

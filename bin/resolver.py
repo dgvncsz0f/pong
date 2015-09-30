@@ -20,7 +20,7 @@ def start (consul):
     def go ():
         while (True):
             try:
-                reply = requests.get("http://%s/v1/health/service/pong?passing" % consul)
+                reply = requests.get("http://%s:8500/v1/health/service/pong?passing" % consul)
                 data  = reply.json()
                 nodes = set([(item["Node"]["Address"], item["Service"]["Port"]) for item in data ])
                 for e in nodes.difference(stats):
