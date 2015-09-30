@@ -42,9 +42,25 @@ handle (s, _) uuid = do
       sendLoop s (printf "[%s|%s] - pong\n" now uuid)
     _      -> sendLoop s (printf "[%s|%s] - fail\n" now uuid)
 
+start :: IORef [MVar ()] -> IO (MVar ())
+start ref = do
+  mvar <- newEmptyMVar
+  atomicModifyIORef' ref (\xs -> (mvar : xs, mvar))
+
+signal :: MVar () -> IO ()
+signal mvar = putMVar mvar ()
+
+waitall :: IORef [MVar ()] -> IO ()
+waitall ref = do
+  mvars <- atomicModifyIORef' ref (\xs -> ([], xs))
+  mapM_ takeMVar mvars
+
 server :: IORef Bool -> Socket -> String -> IO ()
 server ctrl s uuid = do
   cont <- readIORef ctrl
+  wait <- newIORef []
   when cont $ do
-    accept s >>= \s -> forkFinally (handle s uuid) (const $ sClose $ fst s)
+    mvar <- start wait
+    accept s >>= \s -> forkFinally (handle s uuid) (const (signal mvar >> sClose (fst s)))
     server ctrl s uuid
+  waitall wait
