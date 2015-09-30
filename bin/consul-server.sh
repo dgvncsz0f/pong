@@ -9,7 +9,7 @@ mkdir -p /tmp/consul-lib
 mkdir -p /tmp/consul-etc
 
 "${curdir}/../etc/resolvconf-dnsmasq-template.sh" >/etc/resolv-dnsmasq.conf
-env server_ip='127.0.0.1#8600' "${curdir}/../etc/dnsmasq-template.sh" >/etc/dnsmasq.conf
+env consul='127.0.0.1#8600' "${curdir}/../etc/dnsmasq-template.sh" >/etc/dnsmasq.conf
 /etc/init.d/dnsmasq restart
 
 "${curdir}/../etc/resolvconf-template.sh" >/etc/resolv.conf
