@@ -36,31 +36,38 @@ def ping (addr):
 def repeat (s):
     while True:
         yield (s, 4500)
-            
+
+def pingk (s):
+    ke = "fail"
+    try:
+        m = ping(s)
+        if (len(m) == 0):
+            k = ke
+        else:
+            k = m.decode("utf8").strip()
+    except:
+        k = ke
+    return(k)
+
+def dump (c, t0):
+    t1 = time.time()
+    if (t1 - t0 >= 1):
+        for k in sorted(c.keys()):
+            print("%s [%d]" % (k, c[k]))
+        print("--")
+        return({}, t1)
+    return(c, t0)
+
 def client (servers):
     c  = {}
     t0 = time.time()
     for s in servers:
-        t1 = time.time()
-        time.sleep(WAIT)
         if (s is None):
-            print("fail: no servers")
-            continue
-        try:
-            m = ping(s)
-            if (t1 - t0 >= 1):
-                for k in sorted(c.keys()):
-                    print("%s [%d]" % (k, c[k]))
-                print("--")
-                c  = {}
-                t0 = t1
-            if (len(m) == 0):
-                print("fail: connection closed")
-            else:
-                k = m.decode("utf8").strip()
-                c[k] = c.get(k, 0) + 1
-        except:
-            print("fail: can't connect")
+            k = "error"
+        else:
+            k = pingk(s)
+        c[k] = c.get(k, 0) + 1
+        c, t0 = dump(c, t0)
 
 def usage (p):
     print("use: %s local|remote" % p)
