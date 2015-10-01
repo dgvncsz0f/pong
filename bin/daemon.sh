@@ -3,7 +3,7 @@
 daemon=pong
 
 start () {
-  daemon -U -N -i $daemon
+  daemon -U -N -i $daemon +RTS -N2 -A4m
 }
 
 stop () {
@@ -13,7 +13,7 @@ stop () {
 restart () {
   if ! old=$(pgrep pong)
   then exit 1; fi
-  daemon -U -N -i -- $daemon clone
+  daemon -U -N -i -- $daemon clone +RTS -N -A4m
   while [ ! -e /tmp/pong.socket ]; do sleep 1; done
   kill -WINCH $old
   while [ -e /tmp/pong.socket ]; do sleep 1; done
