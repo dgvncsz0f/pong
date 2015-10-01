@@ -8,7 +8,7 @@ cat <<EOF
         "tags": [],
         "port": 9000,
         "check": {
-            "script": "nc -w5 -zv localhost 9000",
+            "script": "nc-check -w5 -zv localhost 9000",
             "interval": "5s"
         }
     }
