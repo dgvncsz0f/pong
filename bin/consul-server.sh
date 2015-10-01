@@ -13,4 +13,4 @@ env consul='127.0.0.1#8600' "${curdir}/../etc/dnsmasq-template.sh" >/etc/dnsmasq
 /etc/init.d/dnsmasq restart
 
 "${curdir}/../etc/resolvconf-template.sh" >/etc/resolv.conf
-daemon -U -N -i -- consul agent -data-dir=/tmp/consul-lib -config-file="${curdir}/../etc/consul-server.cfg" -client 0.0.0.0
+daemon -O/var/log/consul -U -N -i -- consul agent -data-dir=/tmp/consul-lib -config-file="${curdir}/../etc/consul-server.cfg" -client 0.0.0.0
