@@ -27,8 +27,8 @@ recvFdFrom :: FilePath -> IO Fd
 recvFdFrom path = bracket create destroy (\s -> bracket (fst <$> accept s) sClose (recvFd . socketFd))
     where
       destroy s = do
-        removeFile path
         sClose s
+        removeFile path
 
       create = do
         s <- socket AF_UNIX Stream defaultProtocol
