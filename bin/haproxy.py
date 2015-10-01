@@ -24,10 +24,9 @@ global
 
 defaults
   mode tcp
-  retries 3
-  timeout connect 500ms
-  timeout client 500ms
-  timeout server 500ms
+  timeout connect 100ms
+  timeout client 50ms
+  timeout server 50ms
 
 frontend pong
   bind *:4500
