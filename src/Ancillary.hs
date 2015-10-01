@@ -7,6 +7,7 @@ import Foreign.C
 import Network.Socket hiding (recvFd, sendFd)
 import System.Directory
 import Control.Exception
+import Control.Concurrent
 import System.Posix.Types
 import Control.Applicative
 
@@ -24,11 +25,16 @@ socketFd :: Socket -> Fd
 socketFd = fromIntegral . fdSocket
 
 recvFdFrom :: FilePath -> IO Fd
-recvFdFrom path = bracket create destroy (\s -> bracket (fst <$> accept s) sClose (recvFd . socketFd))
+recvFdFrom path = bracket create destroy (\s -> bracket (fst <$> accept s) sClose receive)
     where
       destroy s = do
         sClose s
         removeFile path
+
+      receive s = do
+        let fd = socketFd s
+        threadWaitRead fd
+        recvFd fd
 
       create = do
         s <- socket AF_UNIX Stream defaultProtocol
