@@ -10,7 +10,7 @@ import requests
 import resolver
 import tempfile
 
-CONSUL      = os.environ.get("consul", "127.0.0.1:8500")
+CONSUL      = os.environ.get("consul", "127.0.0.1")
 HAPROXY_CFG = "/tmp/haproxy.cfg"
 HAPROXY_PID = "/tmp/haproxy.pid"
 
