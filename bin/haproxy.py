@@ -29,7 +29,7 @@ defaults
   timeout server 50ms
 
 frontend pong
-  bind *:4500
+  bind *:9000
   default_backend pong
 
 backend pong
