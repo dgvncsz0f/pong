@@ -44,7 +44,7 @@ def client (servers):
             print("FAIL: no servers")
             continue
         try:
-            print(ping(s))
+            print(ping(s).decode("utf8").strip())
         except:
             print("FAIL: can't connect")
 
