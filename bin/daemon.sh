@@ -13,12 +13,14 @@ stop () {
 }
 
 restart () {
+  local old
+  rm -f /tmp/pong.socket
   if ! old=$(pgrep pong)
-  then exit 1; fi
-  daemon -U -N -i -- $daemon clone +RTS -N -A4m
-  while [ ! -e /tmp/pong.socket ]; do sleep 1; done
+  then start; exit $?; fi
+  daemon -E /var/log/pong -U -N -i -- $daemon clone +RTS -N -A4m
+  while sleep 1; do test -e /tmp/pong.socket && break; done
   kill -WINCH $old
-  while [ -e /tmp/pong.socket ]; do sleep 1; done
+  while sleep 1; do test -e /tmp/pong.socket || break; done
   kill -TERM $old
 }
 
