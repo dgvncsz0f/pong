@@ -8,10 +8,6 @@ import socket
 import requests
 import resolver
 
-WAIT    = float(os.environ.get("wait", "0.1"))
-CONSUL  = os.environ.get("consul", "127.0.0.1")
-HAPROXY = os.environ.get("haproxy", "127.0.0.1")
-
 def connect (s, addr):
     try:
         s.connect(addr)
@@ -70,15 +66,14 @@ def client (servers):
         c, t0 = dump(c, t0)
 
 def usage (p):
-    print("use: %s local|remote" % p)
+    print("use: %s consul ip|remote" % p)
             
-resolver.start(CONSUL)
 if (len(sys.argv) >= 2):
-    if (sys.argv[1] == "local"):
+    if (sys.argv[1] == "consul"):
+        resolver.start(sys.argv[2])
         client(resolver.rr())
-    elif (sys.argv[1] == "remote"):
-        client(repeat(HAPROXY))
     else:
-        usage(sys.argv[0])
+        client(sys.argv[1])
+
 else:
     usage(sys.argv[0])
