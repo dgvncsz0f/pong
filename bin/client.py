@@ -38,8 +38,8 @@ def repeat (s):
         yield (s, 4500)
             
 def client (servers):
-    t0    = time.time()
-    count = 1
+    c  = {}
+    t0 = time.time()
     for s in servers:
         t1 = time.time()
         time.sleep(WAIT)
@@ -47,13 +47,18 @@ def client (servers):
             print("fail: no servers")
             continue
         try:
-            if (t1 - t0 > 0.1):
-                print("%s [%d]" % (ping(s).decode("utf8").strip(), count))
-                t0    = t1
-                count = 1
+            m = ping(s)
+            if (t1 - t0 >= 1):
+                for k in sorted(c.keys()):
+                    print("%s [%d]" % (k, c[k]))
+                print("--")
+                c  = {}
+                t0 = t1
+            if (len(m) == 0):
+                print("fail: connection closed")
             else:
-                count += 1
-                ping(s)
+                k = m.decode("utf8").strip()
+                c[k] = c.get(k, 0) + 1
         except:
             print("fail: can't connect")
 
