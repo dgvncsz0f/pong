@@ -38,15 +38,24 @@ def repeat (s):
         yield (s, 4500)
             
 def client (servers):
+    t0    = time.time()
+    count = 1
     for s in servers:
+        t1 = time.time()
         time.sleep(WAIT)
         if (s is None):
-            print("FAIL: no servers")
+            print("fail: no servers")
             continue
         try:
-            print(ping(s).decode("utf8").strip())
+            if (t1 - t0 > 0.1):
+                print("%s [%d]" % (ping(s).decode("utf8").strip(), count))
+                t0    = t1
+                count = 1
+            else:
+                count += 1
+                ping(s)
         except:
-            print("FAIL: can't connect")
+            print("fail: can't connect")
 
 def usage (p):
     print("use: %s local|remote" % p)
