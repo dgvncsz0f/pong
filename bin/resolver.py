@@ -48,5 +48,5 @@ def rr ():
             yield None
         for x in nodes:
             if (x not in stats):
-                break
+                continue
             yield x
