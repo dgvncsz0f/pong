@@ -3,11 +3,13 @@
 daemon=pong
 
 start () {
-  daemon -U -N -i $daemon +RTS -N2 -A4m
+  daemon -U -N -i -- $daemon +RTS -N -A4m
 }
 
 stop () {
   pkill -TERM pong
+  while pgrep pong
+  do sleep 1; done
 }
 
 restart () {
