@@ -73,7 +73,7 @@ if (len(sys.argv) >= 2):
         resolver.start(sys.argv[2])
         client(resolver.rr())
     else:
-        client(sys.argv[1])
+        client(repeat((sys.argv[1], int(sys.argv[2], 10))))
 
 else:
     usage(sys.argv[0])
