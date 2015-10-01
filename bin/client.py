@@ -31,7 +31,7 @@ def ping (addr):
 
 def repeat (s):
     while True:
-        yield (s, 4500)
+        yield s
 
 def pingk (s):
     ke = "fail"
