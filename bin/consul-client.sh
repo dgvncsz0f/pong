@@ -17,4 +17,5 @@ mkdir -p /tmp/consul-etc
 
 "${curdir}/../etc/resolvconf-template.sh" >/etc/resolv.conf
 "${curdir}/../etc/service-template.sh" >/tmp/consul-etc/pong.json
+"${curdir}/../etc/haproxy-svc-template.sh" >/tmp/consul-etc/pong.json
 daemon -U -N -i -- consul agent -join "$consul" -data-dir=/tmp/consul-lib -config-dir=/tmp/consul-etc -config-file="${curdir}/../etc/consul-client.cfg"
